@@ -1,0 +1,97 @@
+.card {
+  background-color: #fff;
+  border-radius: 5px;
+  border: 0.5px solid #858585;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 0px;
+  margin-bottom: 20px;
+  min-height: 300px;
+  max-height: 700px;
+  aspect-ratio: 1/1;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.card-tabs {
+  width: 100%;
+  display: flex;
+  margin: 0 0 10px 0;
+  overflow-x: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #4ea1c4 #fff;
+  button {
+    border: none;
+  }
+
+  * + button {
+    border-left: 1px solid #858585;
+  }
+
+
+  button {
+    background-color: #c2c2c2;
+    border-radius: 0;
+    width:max-content;
+    width: fit-content;
+    min-width: 80px;
+    height: 40px;
+
+    &.active {
+      border-top: 3px solid #4ea1c4;
+      background-color: #fff;
+    }
+  }
+
+  .extra-tabs {
+    display: none;
+
+    &.active {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: 10px;
+    left: 1opx;
+    z-index: 9999;
+    }
+  }
+}
+
+.summary-table {
+  width: 100%;
+  margin-bottom: 10px;
+
+    .value {
+      text-align: center;
+    }
+  
+  
+}
+
+.expense-form {
+  width: 100%;
+  margin-bottom: 10px;
+
+  .total {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px 0px;
+    
+    input {
+      background-color: inherit;
+      color: inherit;
+      width: 50%;
+      min-height: 30px;
+      margin: 0px 5px;
+      box-shadow: none;
+      border-radius: 5px;
+      border: 1px solid #000000;
+    }
+  }
+}
