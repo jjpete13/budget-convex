@@ -2,10 +2,10 @@ import { Button, Card, CardContent, CardHeader, Input, Typography } from "@mui/m
 import { useRef, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { toast } from "./toast/toastObserver";
+import { toast } from "../toast/toastObserver";
 import { useNavigate } from "react-router";
-import { api } from "../../convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useMutation } from "convex/react";
 
 export default function LoginModal() {
   const [reveal, setReveal] = useState(false);
@@ -13,7 +13,6 @@ export default function LoginModal() {
   const pass = useRef("");
   const navigate = useNavigate();
   const user = useMutation(api.users.confirmUser);
-  // console.log(user);
 
   const handleReveal = () => {
     setReveal(() => !reveal);
@@ -22,8 +21,9 @@ export default function LoginModal() {
   const handleLogin = async () => {
     const checkUser = await user({ username: username.current, password: pass.current });
     if (!checkUser) return toast.error("Invalid username or password");
+    sessionStorage.setItem("user", checkUser || "");
     toast.success("Login successful");
-    navigate("/monthlyBudget");
+    navigate("/monthlyBudget"); 
   };
 
 
@@ -49,32 +49,6 @@ export default function LoginModal() {
             onChange={(e) => (pass.current = e.target.value)}
             endAdornment={!reveal ? <VisibilityIcon onClick={handleReveal} /> : <VisibilityOff onClick={handleReveal} />}
           />
-          {/* <Button
-            sx={{
-              align: "center",
-              margin: "0px",
-              padding: "0px",
-              marginLeft: '-10px'
-            }}
-            onClick={handleReveal}
-          >
-            {!reveal ? (
-              <VisibilityIcon
-              fontSize="small"
-                sx={{
-                  color: "black",
-                }}
-              />
-            ) : (
-              <VisibilityOff
-              fontSize="small"
-                sx={{
-                  color: "black",
-                }}
-              />
-            )}
-          </Button> */}
-
           <br />
           <div
             style={{

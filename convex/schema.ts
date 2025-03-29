@@ -13,5 +13,5 @@ export default defineSchema({
     months: v.array(v.string()),
     income: v.record(v.string(), v.any()),
     expenses: v.record(v.string(), v.any()),
-  }),
+  }).index("by_user", ["user_id", "year"]),
 });

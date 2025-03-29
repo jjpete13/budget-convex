@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { useState } from 'react';
+import {  useState } from 'react';
 import './cardWithTabs.css';
 import data from '../../mock/yearly2024.json'
 import SummaryTable from './SummaryTable';
@@ -27,7 +26,8 @@ interface Data {
   [year: string]: {
     months: string[],
     income: Record<string, MonthIncome>,
-    expenses: Record<string, MonthExpense>
+    expenses: Record<string, MonthExpense>,
+    [key: string]: any
   }
 }
 
@@ -36,7 +36,7 @@ interface expense {
   value: number;
 }
 
-const navBar = ({tabs, month, handleMonthChange}: {tabs: string[], month: string, handleMonthChange: (e: any) => void}) => {
+const NavBar = ({tabs, month, handleMonthChange}: {tabs: string[], month: string, handleMonthChange: (e: any) => void}) => {
   return (
     <div className='card-tabs'>
       {tabs.map((tab) => {
@@ -50,31 +50,32 @@ const navBar = ({tabs, month, handleMonthChange}: {tabs: string[], month: string
 }
 
 export type MonthData = {income: MonthIncome, expenses: MonthExpense}
-function getCurrentData(month: string, year: string) {
-  const monthKey = testData[year].months[testData[year].months.indexOf(month)]
+
+function getCurrentData({data, month}: {data: Data, month: string}) {
   let summary: MonthData = {income: {value: 0, details: []}, expenses: {value: 0, details: []}}
-  summary.income = testData[year].income[monthKey]
-  summary.expenses = testData[year].expenses[monthKey]
+  summary.income = data.income ? data.income[month] : {details: [], value: 0};
+  summary.expenses = data.expenses ? data .expenses[month] : {details: [], value: 0};;
   return summary
 }
 
-export default function CardWithTabs() {
-  const tabs = [...testData['2024'].months]
+export default function CardWithTabs(props: any) {
+  const {data} = props
+  const tabs = [...data.months]
   const [month, setMonth] = useState(tabs[0])
   const [currentTab, setCurrentTab] = useState('summary')
-  const [currentData, setCurrentData] = useState(getCurrentData(month, '2024'))
+  const [currentData, setCurrentData] = useState(getCurrentData({data, month}))
   const items = ['summary', 'income', ...currentData.expenses.details.map((item: expense) => item.name)]
 
 
   const handleMonthChange = (e: any) => {
     setMonth(e.target.value)
-    setCurrentData(getCurrentData(e.target.value, '2024'))
+    setCurrentData(getCurrentData({data, month: e.target.value}))
     setCurrentTab('summary')
   }
 
   return (
     <div className="card">
-      {navBar({tabs, month, handleMonthChange})}
+      {NavBar({tabs, month, handleMonthChange})}
       <div className='card-body'>
       <select name="tableItems" id="tableItems" onChange={(e) => setCurrentTab(e.target.value)} value={currentTab}>
         {items.map(item => <option key={item} value={item}>{item}</option>)}

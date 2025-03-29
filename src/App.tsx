@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router';
-import Login from './Login';
+import Login from './pages/Login';
 import ToastList from './components/toast/ToastList';
-import MainDash from './monthlyBudget/MainDash';
+import MainDash from './pages/MainDash';
 import NavBar from './components/navbar/NavBar';
 
 function App() {

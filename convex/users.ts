@@ -26,26 +26,8 @@ export const confirmUser = mutation({
       .collect();
 
     if (match.length > 0) {
-      return true;
+      return match[0]._id;
     }
     return false;
   },
 })
-
-// export const confirmUser = query({
-//   args: {
-//     username: v.string(),
-//     password: v.string(),
-//   },
-//   handler: async (ctx, { username, password }) => {
-//     const match = await ctx.db
-//       .query("users")
-//       .filter((q) => q.eq(q.field("username"), username))
-//       .filter((q) => q.eq(q.field("password"), password))
-//       .collect();
-
-//     if (match.length > 0) {
-//       return match[0];
-//     }
-//   },
-// })
