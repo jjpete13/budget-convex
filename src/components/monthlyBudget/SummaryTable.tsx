@@ -1,5 +1,5 @@
-import type { MonthData } from "./CardWithTabs";
-import './cardWithTabs.css'
+import type { MonthData } from "./MonthlyBudgetCard";
+import './monthlyBudget.css'
 
 export default function SummaryTable({currentData}: {currentData: MonthData}) {
 
