@@ -16,6 +16,7 @@ export const getYearlyData = query({
       .withIndex("by_user")
       .filter((q) => q.eq(q.field("user_id"), userInfo[0].user_id))
       .filter((q) => q.eq(q.field("year"), args.year))
+      // TODO: change this to return first instead of collect
       .collect();
   },
 });
