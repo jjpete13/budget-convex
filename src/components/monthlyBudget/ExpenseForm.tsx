@@ -20,7 +20,7 @@ export default function ExpenseForm({data, expense, updateFormData}: {data: Mont
 
   useEffect(() => {
     setFormData(expense === 'income' ? data.income : data.expenses.details.find(item => item.name === expense))
-  }, [expense])
+  }, [expense, data])
 
   const handleAddRow = () => {
     setFormData(prev => prev ? {...prev, value: prev.value, details: [...prev.details, {name: '', value: 0}]} : formData)
@@ -51,7 +51,7 @@ export default function ExpenseForm({data, expense, updateFormData}: {data: Mont
       <div style={{width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'start', gap: '1em'}}>
       <button onClick={handleAddRow} style={{marginLeft: '1em'}}>+</button>
         <button style={{marginLeft: 'auto'}} onClick={handleCancel}>Cancel</button>
-        <button type="submit" style={{marginRight: '1em'}} onClick={() => updateFormData({isIncome: expense === 'income', newData: formData})}>Save</button>
+        <button type="submit" style={{marginRight: '1em'}} onClick={() => updateFormData({isIncome: expense === 'income', newData: formData?.details})}>Save</button>
       </div>
     </div>
   );

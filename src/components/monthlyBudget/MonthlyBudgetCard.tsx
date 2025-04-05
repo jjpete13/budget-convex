@@ -1,11 +1,12 @@
-import {  useState } from 'react';
+import {  useEffect, useState } from 'react';
 import './monthlyBudget.css';
 import SummaryTable from './SummaryTable';
 import ExpenseForm from './ExpenseForm';
 import { api } from '../../../convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { toast } from '../toast/toastObserver';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateExpense, updateIncome, updateMonthlyBudget } from '../../redux/monthly/actions';
 
  interface MonthIncome {
       value: number,
@@ -51,15 +52,19 @@ function getCurrentData({data, month}: {data: Data, month: string}) {
 }
 
 export default function MonthlyBudgetCard() {
-  const {budget, currentMonth, currentYear} = useSelector((state: any) => state.monthly);
+  // const {budget, currentMonth, currentYear} = useSelector((state: any) => state.monthly);
+  const budget = useSelector((state: any) => state.monthly.budget);
+  const currentMonth = useSelector((state: any) => state.monthly.currentMonth);
   const tabs = [...budget.months]
   const [month, setMonth] = useState(currentMonth)
   const [currentTab, setCurrentTab] = useState('summary')
   const [currentData, setCurrentData] = useState(getCurrentData({data: budget, month}))
   const items = ['summary', 'income', ...currentData.expenses.details.map((item: expense) => item.name)]
-  const state = useSelector((state: any) => state);
+  const dispatch = useDispatch();
 
-  console.log(state);
+  useEffect(() => {
+    setCurrentData(getCurrentData({data: budget, month}))
+  }, [budget, month])
 
   const handleMonthChange = (e: any) => {
     setMonth(e.target.value)
@@ -67,26 +72,27 @@ export default function MonthlyBudgetCard() {
     setCurrentTab('summary')
   }
 
+  // TODO: add check for empty fields and throw error if not all are filled
   const updateFormData = ({isIncome, newData}: {isIncome: boolean, newData: any}) => {
-    // const lastItemFilled = newData.details.filter((item: any) => item.name !== '' && item.value !== 0).length === newData.details.length
-    // if (!lastItemFilled) return toast.error('Please fill in all the fields');
-    // const type = isIncome ? 'income' : 'expenses'
-    // const updates = {[currentTab]: newData}
-    // const reqData = {...data};
-    // reqData[type][month].details.map((item: any, index: number) => item.name === currentTab && (reqData[type][month].details[index] = newData))
-    // console.log(reqData);
+    if (isIncome) {
+      dispatch(updateIncome({month, value: newData}))
+      toast.success('Income updated successfully');
+    } else {
+      dispatch(updateExpense({month, expense: currentTab, value: newData}))
+      toast.success(`${currentTab} updated successfully`);
+    }
+    
   }
 
   return (
     <div className="card">
       {NavBar({tabs, month, handleMonthChange})}
       <div className='card-body'>
-      <select name="tableItems" id="tableItems" onChange={(e) => setCurrentTab(e.target.value)} value={currentTab}>
+      <select name="tableItems" id="tableItems" onChange={(e) => setCurrentTab(e.target.value)} value={currentTab} style={{marginLeft: '10px'}}>
         {items.map(item => <option key={item} value={item}>{item}</option>)}
         </select>
        {currentData && currentTab === 'summary' ? (<SummaryTable currentData={currentData} />) : (<ExpenseForm data={currentData} expense={currentTab} updateFormData={updateFormData} />)}
       </div>
-      
     </div>
   )
 }
