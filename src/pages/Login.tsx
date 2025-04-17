@@ -1,8 +1,9 @@
-import LoginModal from "../components/auth/LoginModal";
+import LoginCard from "../components/auth/LoginCard";
 
 export default function Login() {
-  return (
-    <div>
-      <LoginModal />
-    </div>
-  )}
+	return (
+		<div>
+			<LoginCard />
+		</div>
+	);
+}
