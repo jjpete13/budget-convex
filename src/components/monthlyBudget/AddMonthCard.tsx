@@ -1,8 +1,5 @@
-import "./monthlyBudget.css"
+import "./monthlyBudget.css";
 
 export default function AddMonthCard() {
-
-  return (
-    <div className="card">AddMonthCard</div>
-  )
+	return <div className="card">AddMonthCard</div>;
 }
