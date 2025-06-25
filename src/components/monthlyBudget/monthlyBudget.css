@@ -18,7 +18,7 @@
 	width: 100%;
 	display: flex;
 	margin: 0 0 10px 0;
-	overflow-x: scroll;
+	overflow-x: auto;
 	scrollbar-width: thin;
 	scrollbar-color: #4ea1c4 #fff;
 
@@ -90,6 +90,13 @@
 			box-shadow: none;
 			border-radius: 5px;
 			border: 1px solid #000000;
+		}
+	}
+	button {
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			background-color: #858585;
 		}
 	}
 }

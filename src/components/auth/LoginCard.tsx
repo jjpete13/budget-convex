@@ -45,7 +45,7 @@ export default function LoginCard() {
 		<div className="login" id={colorful ? "colorful" : ""}>
 			<h1
 				style={{ color: colorful ? "#00ffea" : "", cursor: "pointer" }}
-				onClick={() => setColorful(!colorful)}
+				onKeyDown={() => setColorful(!colorful)}
 			>
 				Login
 			</h1>
@@ -69,6 +69,11 @@ export default function LoginCard() {
 					onBlur={() => handleOnBlur("password-label", passRef)}
 					onFocus={() => {
 						handleOnFocus("password-label", passRef);
+					}}
+					onKeyDown={(e) => {
+						if (e.key === "Enter") {
+							handleLogin();
+						}
 					}}
 				/>
 				<label htmlFor="password" id="password-label">

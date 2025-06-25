@@ -22,6 +22,12 @@
 			"recommended": true,
 			"a11y": {
 				"useKeyWithClickEvents": "warn"
+			},
+			"suspicious": {
+				"noExplicitAny": "error"
+			},
+			"style": {
+				"useDefaultParameterLast": "warn"
 			}
 		}
 	},

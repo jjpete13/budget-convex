@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import type React from "react";
 import "./monthlyBudget.css";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import type { MonthData } from "./MonthlyBudgetCard";
 
 const ExpenseRow = ({
@@ -10,7 +8,6 @@ const ExpenseRow = ({
 	name,
 	value,
 	handleChange,
-	handleRemoveRow
 }: {
 	index: number;
 	name: string;
@@ -20,7 +17,6 @@ const ExpenseRow = ({
 		field: "name" | "value",
 		value: string | number,
 	) => void;
-	handleRemoveRow: (index: number) => void;
 }) => {
 	const nameRef = useRef<string>("");
 	const valueRef = useRef<number>(0);
@@ -31,11 +27,7 @@ const ExpenseRow = ({
 		ref.current = value;
 	};
 	return (
-		<div
-			className="item"
-			key={index}
-			style={{ display: "flex", gap: "1rem", margin: "1rem" }}
-		>
+		<>
 			<input
 				type="text"
 				defaultValue={name}
@@ -45,11 +37,12 @@ const ExpenseRow = ({
 			<input
 				type="number"
 				defaultValue={value}
-				onChange={(e) => handleChangeRef(valueRef, parseInt(e.target.value))}
+				onChange={(e) =>
+					handleChangeRef(valueRef, Number.parseInt(e.target.value))
+				}
 				onBlur={() => handleChange(index, "value", valueRef.current)}
 			/>
-			<button onClick={() => handleRemoveRow(index)}>X</button>
-		</div>
+		</>
 	);
 };
 
@@ -65,11 +58,12 @@ export default function ExpenseForm({
 		newData,
 	}: { isIncome: boolean; newData: any }) => void;
 }) {
-	const [formData, setFormData] = useState(
+	const initialData =
 		expense === "income"
 			? data.income
-			: data.expenses.details.find((item) => item.name === expense),
-	);
+			: data.expenses.details.find((item) => item.name === expense);
+	const [formData, setFormData] = useState(initialData);
+	const [disabled, setDisabled] = useState<boolean>(formData === initialData);
 
 	useEffect(() => {
 		setFormData(
@@ -78,6 +72,10 @@ export default function ExpenseForm({
 				: data.expenses.details.find((item) => item.name === expense),
 		);
 	}, [expense, data]);
+
+	useEffect(() => {
+		setDisabled(formData === initialData);
+	}, [formData, initialData]);
 
 	const handleAddRow = () => {
 		setFormData((prev) =>
@@ -116,7 +114,7 @@ export default function ExpenseForm({
 		field: "name" | "value",
 		value: string | number,
 	) => {
-		console.log(value)
+		console.log(value);
 		setFormData((prev) =>
 			prev
 				? {
@@ -139,14 +137,29 @@ export default function ExpenseForm({
 					</div>
 					<form>
 						{(formData?.details || []).map((item, index) => (
-							<ExpenseRow
-								key={`${item.name}-${index}`}
-								index={index}
-								name={item.name}
-								value={item.value}
-								handleChange={handleUpdate}
-								handleRemoveRow={handleRemoveRow}
-							/>
+							<div
+								className="item"
+								key={`expense_${item.name}`}
+								style={{ display: "flex", gap: "1rem", margin: "1rem" }}
+							>
+								<ExpenseRow
+									key={`${item.name}-${index}`}
+									index={index}
+									name={item.name}
+									value={item.value}
+									handleChange={handleUpdate}
+								/>
+								<button
+									style={{
+										opacity: index === formData.details.length - 1 ? 1 : 0,
+									}}
+									disabled={index !== formData.details.length - 1}
+									onClick={() => handleRemoveRow(index)}
+									type="button"
+								>
+									X
+								</button>
+							</div>
 						))}
 					</form>
 				</>
@@ -168,6 +181,7 @@ export default function ExpenseForm({
 					+
 				</button>
 				<button
+					disabled={disabled}
 					type="button"
 					style={{ marginLeft: "auto" }}
 					onClick={handleCancel}
@@ -175,6 +189,7 @@ export default function ExpenseForm({
 					Cancel
 				</button>
 				<button
+					disabled={disabled}
 					type="submit"
 					style={{ marginRight: "1em" }}
 					onClick={() =>

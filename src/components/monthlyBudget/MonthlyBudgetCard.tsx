@@ -96,8 +96,6 @@ export default function MonthlyBudgetCard() {
 		setCurrentTab("summary");
 	};
 
-	console.log({budget})
-
 	// TODO: add check for empty fields
 	const updateFormData = async ({
 		isIncome,
@@ -109,11 +107,11 @@ export default function MonthlyBudgetCard() {
 			dispatch(updateIncome({ month, value: newData }));
 			try {
 				await updateData({
-				user_id: id ?? "",
-				year: budget.year,
-				newData: budget.income,
-				isExpense: false,
-			});
+					user_id: id ?? "",
+					year: budget.year,
+					newData: budget.income,
+					isExpense: false,
+				});
 			} catch (error) {
 				toast.error("Error updating data");
 				console.log(error);
@@ -124,11 +122,11 @@ export default function MonthlyBudgetCard() {
 			dispatch(updateExpense({ month, expense: currentTab, value: newData }));
 			try {
 				await updateData({
-				user_id: id ?? "",
-				year: budget.year,
-				newData: budget.expenses,
-				isExpense: true,
-			});
+					user_id: id ?? "",
+					year: budget.year,
+					newData: budget.expenses,
+					isExpense: true,
+				});
 			} catch (error) {
 				toast.error("Error updating data");
 				console.log(error);
